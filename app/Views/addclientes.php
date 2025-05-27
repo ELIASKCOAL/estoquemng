@@ -22,7 +22,7 @@
 
     <main class="container fade-in">
         <div class="form-container">
-            <form action="<?= base_url('clientes/salvar') ?>" method="post">
+            <form id="clienteForm" action="<?= base_url('clientes/salvar') ?>" method="post">
                 <div class="form-group">
                     <label class="form-label" for="nome">
                         <i class="fas fa-user"></i> Nome Completo
@@ -88,6 +88,36 @@
     </div>
 
     <script src="<?= base_url('js/theme.js') ?>"></script>
+    <script>
+    document.getElementById('clienteForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        fetch('<?= base_url('addclientes/salvar') ?>', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // Redireciona para o dashboard forçando atualização
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    window.location.href = '<?= base_url() ?>';
+                }
+            } else {
+                alert(data.message || 'Erro ao salvar cliente');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao salvar cliente');
+        });
+    });
+    </script>
 </body>
 </html>
 

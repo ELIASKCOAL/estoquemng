@@ -43,12 +43,6 @@ class Database extends Config
         'failover'     => [],
         'port'         => 3306,
         'numberNative' => false,
-        'foundRows'    => false,
-        'dateFormat'   => [
-            'date'     => 'Y-m-d',
-            'datetime' => 'Y-m-d H:i:s',
-            'time'     => 'H:i:s',
-        ],
     ];
 
     //    /**

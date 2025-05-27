@@ -14,18 +14,27 @@
             <a href="<?= base_url('/') ?>" class="nav-link">
                 <i class="fas fa-home"></i> Dashboard
             </a>
-            <a href="<?= base_url('fornecedores') ?>" class="nav-link">Voltar para Fornecedores</a>
+            <a href="<?= base_url('fornecedores') ?>" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Voltar para Fornecedores
+            </a>
         </nav>
     </header>
 
     <main class="container fade-in">
         <div class="form-container">
-            <form action="<?= base_url('savefornecedor') ?>" method="post" data-submit-type="ajax" data-redirect-url="<?= base_url('fornecedores') ?>">
+            <form id="fornecedorForm" action="<?= base_url('addfornecedores/salvar') ?>" method="post">
                 <div class="form-group">
                     <label class="form-label" for="nome">
                         <i class="fas fa-building"></i> Nome da Empresa
                     </label>
                     <input type="text" id="nome" name="nome" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="documento">
+                        <i class="fas fa-id-card"></i> CNPJ
+                    </label>
+                    <input type="text" id="documento" name="documento" class="form-control" required>
                 </div>
 
                 <div class="form-group">
@@ -40,6 +49,13 @@
                         <i class="fas fa-phone"></i> Telefone
                     </label>
                     <input type="tel" id="telefone" name="telefone" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="endereco">
+                        <i class="fas fa-map-marker-alt"></i> Endereço
+                    </label>
+                    <input type="text" id="endereco" name="endereco" class="form-control" required>
                 </div>
 
                 <div class="form-group">
@@ -72,7 +88,31 @@
     </div>
 
     <script src="<?= base_url('js/theme.js') ?>"></script>
-    <script src="<?= base_url('js/notifications.js') ?>"></script>
+    <script>
+    document.getElementById('fornecedorForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        fetch('<?= base_url('addfornecedores/salvar') ?>', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.href = '<?= base_url() ?>?refresh=' + new Date().getTime();
+            } else {
+                alert(data.message || 'Erro ao salvar fornecedor');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao salvar fornecedor');
+        });
+    });
+    </script>
 
     <style>
     .form-actions {

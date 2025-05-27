@@ -7,21 +7,19 @@ class Clientes extends BaseController
 {
     public function index()
     {
-        return view('clientes');
+        $model = new ClienteModel();
+        $data['clientes'] = $model->findAll();
+        return view('clientes', $data);
     }
 
     public function add()
     {
         $model = new ClienteModel();
 
-        // Pega os dados do formulário
-        $data = [
-            'nome'     => trim($this->request->getPost('nome')),
-            'email'    => trim($this->request->getPost('email')),
-            'telefone' => trim($this->request->getPost('telefone')),
-        ];
+        // Captura os dados enviados via JSON no corpo da requisição
+        $data = $this->request->getJSON(true); // true => array associativo
 
-        // Validação simples
+        // Validações básicas
         if (empty($data['nome'])) {
             return $this->response->setJSON([
                 'status' => 'erro',
@@ -54,6 +52,29 @@ class Clientes extends BaseController
                 'status' => 'erro',
                 'mensagem' => 'Erro ao cadastrar cliente.'
             ])->setStatusCode(500);
+        }
+    }
+
+    public function delete($id = null)
+    {
+        if (!$id) {
+            return redirect()->to(base_url('clientes'))->with('error', 'ID do cliente não fornecido');
+        }
+
+        $model = new ClienteModel();
+        
+        if ($model->delete($id)) {
+            session()->setFlashdata('toast', [
+                'type' => 'success',
+                'message' => 'Cliente excluído com sucesso!'
+            ]);
+            return redirect()->to(base_url('clientes'));
+        } else {
+            session()->setFlashdata('toast', [
+                'type' => 'error',
+                'message' => 'Erro ao excluir cliente'
+            ]);
+            return redirect()->to(base_url('clientes'));
         }
     }
 }

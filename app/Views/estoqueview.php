@@ -32,7 +32,7 @@
                 </div>
                 <div class="card-info">
                     <h3>Total de Clientes</h3>
-                    <div class="card-value"><?= isset($total_clientes) ? $total_clientes : '0' ?></div>
+                    <div class="card-value"><?= $total_clientes ?? 0 ?></div>
                     <p class="card-label">clientes ativos</p>
                 </div>
                 <div class="card-actions">
@@ -65,6 +65,24 @@
                 </div>
             </div>
         </div>
+
+        <?php if (isset($debug)): ?>
+        <div class="debug-section" style="margin: 20px; padding: 20px; background: #f5f5f5; border: 1px solid #ddd;">
+            <h3>Informações de Debug:</h3>
+            <pre>
+Total pelo Model: <?= $debug['total_pelo_model'] ?>
+
+Tabelas no Banco:
+<?= print_r($debug['tabelas_existentes'], true) ?>
+
+Colunas da Tabela Clientes:
+<?= print_r($debug['colunas_clientes'], true) ?>
+
+Resultado da Query:
+<?= print_r($debug['query_result'], true) ?>
+            </pre>
+        </div>
+        <?php endif; ?>
 
         <!-- Últimas Atividades -->
         <div class="activity-section">

@@ -4,18 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ClienteModel extends Model
+class FornecedorModel extends Model
 {
-    protected $table = 'clientes';         // nome da tabela no banco
-    protected $primaryKey = 'id';          // chave primária da tabela
+    protected $table = 'fornecedores';
+    protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    
-    // Configurações de timestamp
-    protected $useTimestamps = false;
-    
-    // Regras de validação
+
+    protected $allowedFields = ['nome', 'email', 'telefone', 'status'];
+
+    // Validation
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[100]',
         'email' => 'required|valid_email|max_length[100]',
@@ -60,4 +59,4 @@ class ClienteModel extends Model
         }
         return $data;
     }
-}
+} 

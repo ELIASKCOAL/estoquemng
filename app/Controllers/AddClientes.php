@@ -1,13 +1,17 @@
 <?php 
 namespace App\Controllers;
 
-class AddClientes extends BaseController {
+use App\Models\ClienteModel;
+
+class Addclientes extends BaseController {
 
     public function index() {
         return view('addclientes');
     }
 
     public function salvar() {
+        $model = new ClienteModel();
+        
         // Get the request data
         $data = [
             'nome' => $this->request->getPost('nome'),
@@ -19,13 +23,19 @@ class AddClientes extends BaseController {
         ];
 
         try {
-            // TODO: Add your database insertion logic here
-            // For now, we'll just simulate a successful save
-            
-            return $this->response->setJSON([
-                'success' => true,
-                'message' => 'Cliente salvo com sucesso!'
-            ]);
+            if ($model->insert($data)) {
+                // Redireciona para o dashboard com um parâmetro de atualização
+                return $this->response->setJSON([
+                    'success' => true,
+                    'message' => 'Cliente salvo com sucesso!',
+                    'redirect' => base_url('?refresh=' . time())
+                ]);
+            } else {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erro ao salvar cliente: ' . implode(', ', $model->errors())
+                ])->setStatusCode(500);
+            }
         } catch (\Exception $e) {
             return $this->response->setStatusCode(500)->setJSON([
                 'success' => false,
